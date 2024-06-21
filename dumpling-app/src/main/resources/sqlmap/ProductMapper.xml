@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.transmartx.hippo.mapper.ProductMapper">
+
+    <resultMap id="productMap" type="com.transmartx.hippo.dto.ProductDto">
+        <id property="id" column="id"/>
+        <result property="productCode" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="productStatus" column="product_status"/>
+        <result property="isValid" column="is_valid"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectByProductId" resultMap="productMap">
+        SELECT
+            *
+        FROM
+            `product`
+        WHERE
+            product_id = #{productId} AND is_valid = 1
+        LIMIT 1
+    </select>
+
+</mapper>

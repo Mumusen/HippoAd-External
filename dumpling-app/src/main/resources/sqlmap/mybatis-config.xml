@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <typeAliases>
+        <typeAlias type="com.transmartx.hippo.dto.OrderDto" alias="orderDto"/>
+        <typeAlias type="com.transmartx.hippo.dto.ChannelDto" alias="channelDto"/>
+        <typeAlias type="com.transmartx.hippo.dto.ProductDto" alias="productDto"/>
+        <typeAlias type="com.transmartx.hippo.dto.OrderInvokeRecordDto" alias="orderInvokeRecordDto"/>
+        <typeAlias type="com.transmartx.hippo.dto.BizRequestReportDto" alias="bizRequestReportDto"/>
+        <typeAlias type="com.transmartx.hippo.dto.OrderDetailReportDto" alias="orderDetailReportDto"/>
+    </typeAliases>
+
+<!--    <plugins>-->
+<!--        <plugin interceptor="customSqlLogInterceptor"/>-->
+<!--    </plugins>-->
+
+<!--    <environments default="">-->
+<!--        <environment id="">-->
+<!--            <transactionManager type="">-->
+<!--                <property name="" value=""/>-->
+<!--            </transactionManager>-->
+<!--            <dataSource type=""></dataSource>-->
+<!--        </environment>-->
+<!--    </environments>-->
+
+
+    <mappers>
+        <mapper resource="sqlmap/OrderMapper.xml"/>
+        <mapper resource="sqlmap/ChannelMapper.xml"/>
+        <mapper resource="sqlmap/ProductMapper.xml"/>
+        <mapper resource="sqlmap/OrderInvokeRecordMapper.xml"/>
+        <mapper resource="sqlmap/ReportMapper.xml"/>
+    </mappers>
+
+</configuration>

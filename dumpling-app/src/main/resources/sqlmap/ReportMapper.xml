@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.transmartx.hippo.mapper.ReportMapper">
+
+    <resultMap id="orderDetailReportMap" type="com.transmartx.hippo.dto.OrderDetailReportDto">
+        <result property="agentId" column="agent_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="upstreamOrderId" column="upstream_order_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="clientIp" column="client_ip"/>
+        <result property="clientUA" column="client_ua"/>
+        <result property="bizOrderTime" column="biz_order_time"/>
+    </resultMap>
+
+    <resultMap id="bizRequestReportMap" type="com.transmartx.hippo.dto.BizRequestReportDto">
+        <result property="dateTime" column="date_time"/>
+        <result property="sendSmsTotalCount" column="send_sms_total_count"/>
+        <result property="sendSmsSuccessCount" column="send_sms_success_count"/>
+        <result property="sendSmsFailCount" column="send_sms_fail_count"/>
+        <result property="bizSubmitTotalCount" column="biz_submit_total_count"/>
+        <result property="bizSubmitSuccessCount" column="biz_submit_success_count"/>
+        <result property="bizSubmitFailCount" column="biz_submit_fail_count"/>
+    </resultMap>
+
+    <select id="getAccessEmails" resultType="string">
+        SELECT
+            `email`
+        FROM
+            report_access_email
+        WHERE is_valid = 1
+    </select>
+
+    <select id="listOrderDetailReports" resultMap="orderDetailReportMap">
+        SELECT
+            channel_id as agent_id,
+            order_id,
+            create_time,
+            upstream_order_id,
+            product_id,
+            phone_number,
+            client_ua,
+            client_ip,
+            update_time as biz_order_time
+        FROM
+            `order`
+        WHERE
+            order_status = 30
+            <if test="from != null">
+                AND create_time &gt;= #{from}
+            </if>
+            <if test="to != null">
+                AND create_time &lt;= #{to}
+            </if>
+            <if test="agentId != null">
+                AND channel_id = #{agentId}
+            </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listBizRequestReport" resultMap="bizRequestReportMap">
+        SELECT
+            COUNT(if(biz_type = 'sendConfirmSms', true, null)) as send_sms_total_count,
+            COUNT(if(biz_type = 'sendConfirmSms' and rsp_code = 200, true, null)) as send_sms_success_count,
+            COUNT(if(biz_type = 'sendConfirmSms' and rsp_code != 200, true, null)) as send_sms_fail_count,
+            COUNT(if(biz_type = 'submit', true, null)) as biz_submit_total_count,
+            COUNT(if(biz_type = 'submit' and rsp_code = 200, true, null)) as biz_submit_success_count,
+            COUNT(if(biz_type = 'submit' and rsp_code != 200, true, null)) as biz_submit_fail_count
+        FROM `order_invoke_record`
+        WHERE 1 = 1
+            <if test="from != null">
+                AND create_time &gt;= #{from}
+            </if>
+            <if test="to != null">
+                AND create_time &lt;= #{to}
+            </if>
+            <if test="agentId != null">
+                AND channel_id = #{agentId}
+            </if>
+    </select>
+
+    <select id="listBizRequestReportGroupByDate" resultMap="bizRequestReportMap">
+        SELECT
+            DATE(create_time) as date_time,
+            COUNT(if(biz_type = 'sendConfirmSms', true, null)) as send_sms_total_count,
+            COUNT(if(biz_type = 'sendConfirmSms' and rsp_code = 200, true, null)) as send_sms_success_count,
+            COUNT(if(biz_type = 'sendConfirmSms' and rsp_code != 200, true, null)) as send_sms_fail_count,
+            COUNT(if(biz_type = 'submit', true, null)) as biz_submit_total_count,
+            COUNT(if(biz_type = 'submit' and rsp_code = 200, true, null)) as biz_submit_success_count,
+            COUNT(if(biz_type = 'submit' and rsp_code != 200, true, null)) as biz_submit_fail_count
+        FROM `order_invoke_record`
+        WHERE 1 = 1
+        <if test="from != null">
+            AND create_time &gt;= #{from}
+        </if>
+        <if test="to != null">
+            AND create_time &lt;= #{to}
+        </if>
+        <if test="agentId != null">
+            AND channel_id = #{agentId}
+        </if>
+        GROUP BY date_time
+    </select>
+
+</mapper>

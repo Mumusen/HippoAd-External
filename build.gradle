@@ -1,0 +1,78 @@
+buildscript {
+    ext {
+        dumplingVersion = '1.0.0-SNAPSHOT'
+        springDependencyManagementVersion = '1.0.4.RELEASE'
+        springBootVersion = '2.1.12.RELEASE'
+        bouncycastleVersion = '1.58'
+        commonsBeanUtilsVersion = '1.9.3'
+        commonsCodecVersion = '1.10'
+        commonsCollectionsVersion = '4.1'
+        commonsLangVersion = '3.6'
+        commonsTextVersion = '1.1'
+        caffeineVersion = '2.5.6'
+        nettyVersion = '4.1.24.Final'
+        guavaVersion = '23.2-jre'
+        protobufVersion = '3.4.0'
+        protobufPluginVersion = '0.8.3'
+        jacksonVersion = '2.9.0'
+        druidVersion = '1.1.16'
+        apiVersion = '1.0.0-SNAPSHOT'
+        aliyunLogVersion = '0.6.10'
+        aliyunLoghubroducerVersion = '0.1.8'
+        asyncHttpClientVersion = '2.4.7'
+    }
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("com.google.protobuf:protobuf-gradle-plugin:${protobufPluginVersion}")
+    }
+}
+
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'eclipse'
+    apply plugin: 'idea'
+
+    group = 'com.transmartx.hippo'
+    version = "${dumplingVersion}"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+subprojects { subproject ->
+    apply plugin: 'io.spring.dependency-management'
+
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        maven{ url 'http://maven.aliyun.com/nexus/content/repositories/jcenter'}
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        }
+    }
+
+    task copyToLib(type: Copy) {
+        from "$buildDir/libs/"
+        into "$rootDir/deploy/lib/"
+        include "dumpling-app-${apiVersion}.jar"
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    build.dependsOn(copyToLib)
+    test.onlyIf { false }
+
+}

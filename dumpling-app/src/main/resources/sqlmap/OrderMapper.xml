@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.transmartx.hippo.mapper.OrderMapper">
+
+    <resultMap id="orderMap" type="com.transmartx.hippo.dto.OrderDto">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="bizAreaCode" column="biz_area_code"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="orderStatus" column="order_status"/>
+        <result property="productId" column="product_id"/>
+        <result property="upstreamOrderId" column="upstream_order_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="clientIp" column="client_ip"/>
+        <result property="clientUA" column="client_ua"/>
+    </resultMap>
+
+    <select id="selectByOrderId" resultMap="orderMap">
+        SELECT
+            *
+        FROM
+            `order`
+        WHERE
+            order_id = #{orderId}
+    </select>
+
+    <insert id="insertOne" parameterType="orderDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `order` (`order_id`, `phone_number`, `biz_area_code`, `channel_id`, `order_status`, `product_id`, `upstream_order_id`, `client_ip`, `client_ua`)
+        VALUES (#{orderId}, #{phoneNumber}, #{bizAreaCode}, #{channelId}, #{orderStatus}, #{productId}, #{upstreamOrderId}, #{clientIp}, #{clientUA})
+    </insert>
+
+    <update id="updateOrderStatus" parameterType="map">
+        UPDATE `order` SET `order_status` = #{orderStatus}, `client_ip` = #{clientIp}, `client_ua` = #{clientUA} WHERE `order_id` = #{orderId}
+    </update>
+
+    <update id="updateOrderStatusWithException" parameterType="map">
+        UPDATE `order` SET `order_status` = #{orderStatus}, `exception` = #{exception} WHERE `order_id` = #{orderId}
+    </update>
+
+    <update id="updateUpstreamOrderId" parameterType="map">
+        UPDATE `order` SET `upstream_order_id` = #{upstreamOrderId}, `order_status` = #{orderStatus} <if test="exception != null"> , `exception` = #{exception} </if> WHERE `order_id` = #{orderId}
+    </update>
+
+</mapper>

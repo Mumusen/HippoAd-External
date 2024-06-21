@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.transmartx.hippo.mapper.OrderInvokeRecordMapper">
+
+    <resultMap id="orderInvokeRecordMap" type="com.transmartx.hippo.dto.OrderInvokeRecordDto">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="bizType" column="biz_type"/>
+        <result property="phoneNumber" column="phone_number"/>
+        <result property="bizAreaCode" column="biz_area_code"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="clientIp" column="client_ip"/>
+        <result property="clientUA" column="client_ua"/>
+        <result property="rspCode" column="rsp_code"/>
+        <result property="rspMsg" column="rsp_msg"/>
+        <result property="exception" column="exception"/>
+        <result property="smsCode" column="sms_code"/>
+    </resultMap>
+
+    <insert id="insertOne" parameterType="orderInvokeRecordDto" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `order_invoke_record` (`biz_type`, `order_id`, `phone_number`, `biz_area_code`, `channel_id`, `product_id`, `rsp_code`, `rsp_msg`, `exception`, `client_ip`, `client_ua`, `sms_code`)
+        VALUES (#{bizType}, #{orderId}, #{phoneNumber}, #{bizAreaCode}, #{channelId}, #{productId}, #{rspCode}, #{rspMsg}, #{exception}, #{clientIp}, #{clientUA}, #{smsCode})
+    </insert>
+
+</mapper>

@@ -1,0 +1,3 @@
+rootProject.name = 'dumpling-api'
+include 'dumpling-app'
+

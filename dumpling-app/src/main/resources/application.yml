@@ -1,0 +1,90 @@
+logging:
+  level:
+    root: INFO
+
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    api:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/dumpling-api?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&serverTimezone=UTC
+      username: root
+      password: root
+      initialSize: 5
+      minIdle: 5
+      maxActive: 20
+      maxWait: 60000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: false
+      maxPoolPreparedStatementPerConnectionSize: 20
+      filters: stat,wall,log4j
+      useGlobalDataSourceStat: true
+      connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+      sysdateOffset: 0
+  mail:
+    host:
+    username:
+    password:
+    default-encoding: UTF-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          ssl:
+            enable: true
+
+dumpling:
+  app:
+    report:
+      ipWhiteList: 0:0:0:0:0:0:0:1
+      download:
+        enabled: true
+    auth:
+      verifyDisabled: true
+    product:
+      aesEncryptKey: hippo@2024010101
+    counter:
+      localMinute:
+        maxSize: 100
+        expireMinutes: 10
+    order:
+      upstream:
+        sendSmsRspCodeWhiteConf: '9100060004;'
+        submitOrderRspCodeWhiteConf: '981024;981004;981248;981025;1000010041'
+      service:
+        rateLimit:
+          qpsLimit: 10
+          ipQpsLimit: 5
+          minuteRateLimit: 100
+          ipMinuteRateLimit: 30
+
+
+mail:
+  fromMail:
+    addr:
+
+upstream:
+  mobile:
+    api:
+      submitOrder:
+        url: 'https://openapi.gd.10086.cn/eaop/rest/BSS/commodity/productordercheckrandom/v1.1.1'
+      sendOrderConfirmSms:
+        url: 'https://openapi.gd.10086.cn/eaop/rest/BSS/commodity/SendOrderConfirmSms/v1.1.1'
+      signPrivateKey: 'MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCmulqAKdiYwQx4bLm1P9lLIR6CDGkdlhcSLNaH8f4dxVZOlc+xdIPiCdYy+xiuXA9x9D2NLklWDkkVs06FCWIjVtXDoyADp/BFO5pIKmp4vq2NFg1QzQzGAkbrGGw03xCA85JZ6cPZ43zGt8ESYN5vOfUmQPPnIUK7SgBMIONPgOYhtLPXGfP+lGD7OUcqW8LXI7yGXWuo14V/aMF5db/WRjWdVjQEpInYrH55pNQsNlwmnt20EuMexwsulFk7CqUVZNSew0ctn9Tr+p1rGTv0vNB9xQ9UjgtXVxoc4onS4UbBouMvS1rV+uZ3i+HkHzCH8mSzvVobO/HsTS5HhBIrAgMBAAECggEAGAXz8lGVPvVZ+aQY4g/QHG4qOizVnIi6zEifpLjul5WOiQY3Bee29QPb1D6v4LetFgtOLyCDOp4WU8UhRDQE6vihFm5Tt5MkIKWk5k8ORlWbJiAOTR0ugP1lAIzlUnztoNb3uHLhYGzR1sQ1UpOYmUgtlZR4UE5PkjLodg+rERJSyaviaAVHFg9f8qvA9jXl77enffXnrzpqDuHtkcVMVm3heYEWzqBFO7k/MJXJtLqv+ZDeJe9gQ/2RlZIxKKXo33twixVolRmDFYLPE9AGWPsnAMjuunU37nrqmJA30r9zHxV1AXuFmkOPsLjgqfGwnIO9YN1qTpnRavJtc7k9WQKBgQDi91xAfSRohxab43MNZj0kyvy3AgBQ4pTfOXfcE7cfg8F/AyvqFPLDVcE8dAJ0AhpTkIfVttx4zVRnDBtgE4si0UEJWfZSde6B7QH3um0SKQ9uYxPHp8zGymgxlWm20lBgnIhUH9JFqqc/h2a7hiwpTarGmdX+n7KBuxkc03pE7QKBgQC8DlKXvFKqM0wMxUJtOM4RymUEOeimR2/cfDc1DgwakZ/oQeExFYm165PpZ2TGFYyoGEbOjF3M/RzuRtw6+1WAVKsgaDwWx/TE24OmyOf2sWvU48vjW20igiy3lSP1mHTDKJXTYR00WgF7m8pZEUy4YtqcbltpJUT1M0uI3m0odwKBgQDiE4LQudaKSAU9QlJYBn7hJ1CS+mtWJlwj/hpmHT1LJvKWkZIsmLE34TOaA/Rtmaqfkle7iWoS6nQoMOcTzGPLSqR9rB6wBMiOooZTPF9ot32ndwk81ugjG3qt6SZj9RobIdCp+wh4XIQ7w6ORJxTWD4cMTC/ccTZeAwAAtqYUAQKBgBhAsJ4pB3Az1WcAOaTkYo8gzw5QeZSYOfDxhB0vhpgWl8zYUjaGVJBFpXnAf9qcBNvY5ajVqXM6YXTJZrWknE5EnR081CML/qE0vjHQTzodf46hIjZcICMHLsUuUsjltIlGvqvYJnAN+4r5eIssE/zjotXx1ZAl4lLNHry0EtfZAoGBANp8PDEkAOHDIf+kg46vZst3oB7+LjdMJwlZ9wjF45ctAUnTJKJJcM1AI7Z3go4ShAkqn4zKdN2GEJNd9bYHNPwCEImWXQGKLrkyAKa//aSEz3EmAfA0EfRLnFdtDHwqg67a95T9n9VUeSd6zdG3hx/c5NKaSMsz/lLXcB2bSq7+'
+      appId: 12601
+      httpClient:
+        threadPoolName: UPSTREAM-API
+        maxConnections: 50
+        connectTimeout: 5000
+        readTimeout: 5000
+        requestTimeout: 3000
+        userAgent: dumpling/1.0
+        ioThreadsCount: 4
+      timeout: 10000
